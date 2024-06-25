@@ -1,3 +1,6 @@
+using Ejercicio4Modulo2;
+using Microsoft.EntityFrameworkCore;
+
 namespace EjercicioModulo3Clase2
 {
     public class Program
@@ -21,6 +24,10 @@ namespace EjercicioModulo3Clase2
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            
+            builder.Services.AddControllers();
+            builder.Services.AddDbContext<DBContext>(options => 
+                options.UseSqlServer("Server=localhost,1433;Database=master;User Id=sa;Password=Password12345;"));
 
             app.UseHttpsRedirection();
 
