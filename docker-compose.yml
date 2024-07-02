@@ -19,7 +19,6 @@ services:
       - app-network-public
     restart: always
     env_file:
-      - sqlserver.env
-      - sapassword.env
+      - .env
     ports:
       - '1433:1433'

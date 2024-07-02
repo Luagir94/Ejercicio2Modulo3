@@ -1,6 +1,6 @@
-namespace EjercicioModulo3Clase2.Entities;
+namespace EjercicioModulo3Clase2.Domain.Entities;
 
-public class Task
+public class Tarea
 {
     public int Id { get; set; }
     public string Title { get; set; }

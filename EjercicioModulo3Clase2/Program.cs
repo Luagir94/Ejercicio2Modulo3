@@ -1,4 +1,6 @@
-using Ejercicio4Modulo2;
+using EjercicioModulo3Clase2.Application.Services;
+using EjercicioModulo3Clase2.Domain.Contracts;
+using EjercicioModulo3Clase2.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace EjercicioModulo3Clase2
@@ -16,8 +18,15 @@ namespace EjercicioModulo3Clase2
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+            builder.Services.AddDbContext<TaskRepository>(options => 
+                options.UseSqlServer("Server=localhost,1433;Database=master;User Id=sa;Password=Password12345;"));
+            
+            
+            builder.Services.AddScoped<ITaskService, TaskService>();
 
+
+          
+            var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -26,8 +35,6 @@ namespace EjercicioModulo3Clase2
             }
             
             builder.Services.AddControllers();
-            builder.Services.AddDbContext<DBContext>(options => 
-                options.UseSqlServer("Server=localhost,1433;Database=master;User Id=sa;Password=Password12345;"));
 
             app.UseHttpsRedirection();
 

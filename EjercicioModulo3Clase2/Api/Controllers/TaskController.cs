@@ -1,13 +1,16 @@
-﻿using Ejercicio4Modulo2;
+﻿using EjercicioModulo3Clase2.Domain.Contracts;
+using EjercicioModulo3Clase2.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Task = EjercicioModulo3Clase2.Entities.Task;
 
-namespace EjercicioModulo3Clase2.Controllers
+namespace EjercicioModulo3Clase2.Api.Controllers
 {
     [Route("")]
     [ApiController]
     public class TaskController : ControllerBase
     {
+        
+        
+        
         #region Pasos previos
 
         /*
@@ -19,11 +22,12 @@ namespace EjercicioModulo3Clase2.Controllers
          */
 
 
-        private readonly DBContext _context;
+        private readonly ITaskService _taskService;
 
-        public TaskController(DBContext context)
+        public TaskController(
+            ITaskService taskService)
         {
-            _context = context;
+            _taskService = taskService;
         }
 
         #endregion
@@ -37,7 +41,8 @@ namespace EjercicioModulo3Clase2.Controllers
         [HttpGet]
         public IActionResult GetTasks()
         {
-            return Ok(_context.Tasks.ToList());
+            var tasks = _taskService.GetTasks();
+            return Ok(tasks);
         }
 
         #endregion
@@ -50,7 +55,7 @@ namespace EjercicioModulo3Clase2.Controllers
         [HttpGet]
         public IActionResult GetTask(int id)
         {
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == id);
+            var task = _taskService.GetTaskById(id);
             if (task == null)
             {
                 return NotFound();
@@ -67,11 +72,12 @@ namespace EjercicioModulo3Clase2.Controllers
 
         [Route("")]
         [HttpPost]
-        public IActionResult CreateTask([FromBody] Task task)
+        public IActionResult CreateTask([FromBody] Tarea task)
         {
-            _context.Tasks.Add(task);
-            _context.SaveChanges();
-            return Ok(task);
+
+            _taskService.CreateTask(task);
+            
+            return NoContent();
         }
 
         #endregion
@@ -80,19 +86,16 @@ namespace EjercicioModulo3Clase2.Controllers
 
         // Crear un endpoint para marcar una tarea como completada usando HTTP PUT
 
-        [Route("{id}")]
+        [Route("{id}/complete")]
         [HttpPut]
         public IActionResult CompleteTask(int id)
         {
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == id);
+            var task = _taskService.CompleteTask(id);
             if (task == null)
             {
                 return NotFound();
             }
-
-            task.IsCompleted = true;
-            _context.SaveChanges();
-            return Ok(task);
+            return NoContent();
         }
 
         #endregion
@@ -101,20 +104,17 @@ namespace EjercicioModulo3Clase2.Controllers
 
         // Crear un endpoint para dar de baja una tarea usando HTTP PUT (baja lógica)
 
-        [Route("{id}")]
+        [Route("{id}/disable")]
         [HttpPut]
         public IActionResult DisableTask(int id)
         {
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == id);
+            var task = _taskService.DisableTask(id);
             if (task == null)
             {
                 return NotFound();
             }
-
-            task.IsActive = false;
-
-            _context.SaveChanges();
-            return Ok(task);
+            
+            return NoContent();
         }
 
         #endregion
